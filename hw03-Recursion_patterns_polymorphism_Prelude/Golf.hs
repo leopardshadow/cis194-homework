@@ -11,6 +11,8 @@ skips list = let steps = [ i | i <- [1 .. length list]] in
 indexAt:: [Int] -> [a] -> [a]
 indexAt indices list = [list!!x | x <- indices]
 
+
+
 -- TO-DO: Try using fold !!
 -- skips x = [ (foldr \i->{} [] [n | n <- [1, 1+m .. length x]] ) | m <- [1..length x]]
 
@@ -27,7 +29,14 @@ exercise2 = do
     print $ localMaxima [2,3,4,1,5] == [4]
     print $ localMaxima [1,2,3,4,5] == []
 
--- exercise 3: Histogram
 
+-- exercise 3: Histogram
+histogram :: [Integer] -> String
+histogram lst = let cntLst = count lst in
+                    unlines $ [ [ if (cntLst!!num >= line) then '*' else ' ' | num <- [0..9] ] | line <- [maximum cntLst, maximum cntLst-1 .. 1] ] ++ ["==========", "0123456789"]
+
+count :: [Integer] -> [Int]
+count lst = [ length $ filter (==n) lst | n <- [0..9] ]
+-- traverse the list 10 times better solution ??
 
 
