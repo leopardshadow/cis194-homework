@@ -14,11 +14,8 @@ indexAt:: [Int] -> [a] -> [a]
 indexAt indices list = [list!!x | x <- indices]
 
 
-
--- TO-DO: Try using fold !!
--- skips x = [ (foldr \i->{} [] [n | n <- [1, 1+m .. length x]] ) | m <- [1..length x]]
-
 -- erxrcise 2: Local maxima
+
 localMaxima :: [Integer] -> [Integer]
 localMaxima (n1:n2:n3:list)
     | n1 < n2 && n2 > n3 = n2 : localMaxima restLst
@@ -37,6 +34,7 @@ exercise2 = and
 
 
 -- exercise 3: Histogram
+
 histogram :: [Integer] -> String
 histogram lst = unlines $ [ [ if (cntLst!!num >= line) then '*' else ' ' | num <- [0..9] ] | line <- liness  ] ++ legends
                     where cntLst = count lst
