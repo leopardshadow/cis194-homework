@@ -64,10 +64,59 @@ testEx3 = and
 
 -- Erercise 4
 
+-- newtype MinMax  = MinMax Integer deriving (Eq, Show)
 
 
+instance Expr Integer where
+    lit = id
+    add = (+)
+    mul = (*)
 
 
+instance Expr Bool where
+    lit = (>0)
+    add = (||)
+    mul = (&&)
+
+---
+newtype MinMax  = MinMax Integer deriving (Eq, Show)
+
+instance Expr MinMax where
+    lit x = MinMax x
+    add (MinMax x) (MinMax y) = MinMax $ min x y
+    mul (MinMax x) (MinMax y) = MinMax $ max x y
+
+---
+newtype Mod7 = Mod7 Integer deriving (Eq, Show)
+
+instance Expr Mod7 where
+    lit x   = Mod7 $ x `mod` 7
+    add (Mod7 x) (Mod7 y) = Mod7 $ (x + y) `mod` 7
+    mul (Mod7 x) (Mod7 y) = Mod7 $ (x * y) `mod` 7
 
 
+testExp :: Expr a => Maybe a
+testExp = parseExp lit add mul "(3 * -4) + 5"
+
+testInteger :: Maybe Integer
+testInteger = testExp :: Maybe Integer
+
+testBool :: Maybe Bool
+testBool = testExp :: Maybe Bool
+
+testMM :: Maybe MinMax
+testMM = testExp :: Maybe MinMax
+
+testSat :: Maybe Mod7
+testSat = testExp :: Maybe Mod7
+
+
+testEx4 :: Bool
+testEx4 = and
+    [
+        testInteger == Just (-7), 
+        testBool == Just True,
+        testMM == Just (MinMax 3),
+        testSat == Just (Mod7 0)
+    ]
 
