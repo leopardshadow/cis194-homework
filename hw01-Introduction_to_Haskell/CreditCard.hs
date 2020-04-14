@@ -11,12 +11,14 @@ toDigitsRev n
     | n <= 0  = []
     | otherwise = n `mod` 10  : (toDigitsRev $ n `div` 10)
 
-
-exercise1 = do
-    print $ toDigits 1234 == [1,2,3,4]
-    print $ toDigitsRev 1234 == [4,3,2,1]
-    print $ toDigits 0 == []
-    print $ toDigits (-17) == []
+exercise1 :: Bool
+exercise1 = and 
+    [
+        toDigits 1234 == [1,2,3,4],
+        toDigitsRev 1234 == [4,3,2,1],
+        toDigits 0 == [],
+        toDigits (-17) == []
+    ]
 
 
 -------------
@@ -34,9 +36,12 @@ doubleEveryOther []  = []
 doubleEveryOther [x] = [x]
 doubleEveryOther xs  = (doubleEveryOther $ init $ init xs) ++ [ (*2) $ last $ init xs] ++ [last xs] 
 
-exercise2 = do
-    print $ doubleEveryOther [8,7,6,5] == [16,7,12,5] 
-    print $ doubleEveryOther [1,2,3] == [1,4,3]
+exercise2 :: Bool
+exercise2 = and
+    [
+        doubleEveryOther [8,7,6,5] == [16,7,12,5] ,
+        doubleEveryOther [1,2,3] == [1,4,3]
+    ]
 -------------
 
 
@@ -46,8 +51,11 @@ sumDigits [] = 0
 sumDigits (x:xs) = x `div` 10 + x `mod` 10 + sumDigits xs 
 -- sumDigits (x:xs) = sumDigits $ toDigits x + (sumDigits xs)
     
-exercise3 = do
-    print $ sumDigits [16,7,12,5] == 22
+exercise3 :: Bool
+exercise3 = and 
+    [
+        sumDigits [16,7,12,5] == 22
+    ]
 -------------
 
 
@@ -55,9 +63,12 @@ exercise3 = do
 validate :: Integer -> Bool
 validate n =  ( sumDigits $ doubleEveryOther $ toDigits n) `mod` 10 == 0
 
-exercise4 = do
-    print $ validate 4012888888881881 == True
-    print $ validate 4012888888881882 == False
+exercise4 :: Bool
+exercise4 = and
+    [
+        validate 4012888888881881 == True,
+        validate 4012888888881882 == False
+    ]
 -------------
 
 
