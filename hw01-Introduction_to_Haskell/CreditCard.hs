@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -Wall #-}
 
 -- Exercise 1
 toDigits :: Integer -> [Integer]
