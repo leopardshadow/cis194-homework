@@ -38,23 +38,36 @@ testEx2 = and
 
 -- Erercise 3
 
--- class Expr a where
---     lit :: a -> ExprT
---     add :: ExprT -> ExprT -> ExprT
---     mul :: ExprT -> ExprT -> ExprT
+class Expr a where
+    lit :: Integer -> a
+    add :: a -> a -> a
+    mul :: a -> a -> a
 
--- instance Expr ExprT where
 
---     lit :: Integer -> ExprT
---     lit n = Lit n 
+instance Expr ExprT where
+    lit n = Lit n
+    add e1 e2 = Add e1 e2
+    mul e1 e2 = Mul e1 e2
 
---     add :: ExprT -> ExprT -> ExprT
---     add e1 e2 = Add e1 e2
 
---     mul :: ExprT -> ExprT -> ExprT
---     mul e1 e2 = Mul e1 e2
+reify :: ExprT -> ExprT
+reify = id
 
--- testEx3 = and
---     [
---         mul (add (lit 2) (lit 3)) (lit 4) :: ExprT == Mul (Add (Lit 2) (Lit 3)) (Lit 4)
---     ]
+
+testEx3 :: Bool
+testEx3 = and
+    [
+        (mul (add (lit 2) (lit 3)) (lit 4) :: ExprT) == Mul (Add (Lit 2) (Lit 3)) (Lit 4),
+        reify (mul (add (lit 2) (lit 3)) (lit 4)) == Mul (Add (Lit 2) (Lit 3)) (Lit 4)
+    ]
+
+
+-- Erercise 4
+
+
+
+
+
+
+
+
