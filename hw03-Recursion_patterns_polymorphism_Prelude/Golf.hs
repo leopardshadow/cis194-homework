@@ -1,5 +1,7 @@
-module Golf where
+{-# OPTIONS_GHC -Wall #-}
 
+
+module Golf where
 
 -- exercise 1: Hopscotch
 
@@ -24,10 +26,12 @@ localMaxima (n1:n2:n3:list)
     where restLst = (n2:n3:list)
 localMaxima _ = []
 
-exercise2 = do 
-    print $ localMaxima [2,9,5,6,1] == [9,6]
-    print $ localMaxima [2,3,4,1,5] == [4]
-    print $ localMaxima [1,2,3,4,5] == []
+exercise2 = and
+	[
+		localMaxima [2,9,5,6,1] == [9,6]
+		localMaxima [2,3,4,1,5] == [4]
+		localMaxima [1,2,3,4,5] == []
+	]
 
 
 -- exercise 3: Histogram
