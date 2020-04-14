@@ -36,7 +36,7 @@ localMaxima (n1:n2:n3:list)
     | otherwise = localMaxima restLst
     where restLst = (n2:n3:list)
 ```
-一開始我還在想用前後相減，剪完後如果前面是負，後面是正，則代表他是 local maxima ，不要這樣的想法好像有點麻煩
+一開始我還在想用前後相減，剪完後如果前面是負，後面是正，則代表他是 local maxima ，不過這樣的想法好像有點麻煩
 ```
  2   9   5   6   1
   -7   4   -1  5
