@@ -1,4 +1,9 @@
 {-# OPTIONS_GHC -Wall #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# OPTIONS_GHC -fno-warn-missing-methods #-}
+
+
+-- module Fibonacci where
 
 -- Exercise 1
 
@@ -15,6 +20,11 @@ fibs1 = map fib [0..]
 -- Exercise 2
 
 -- fibs2 :: [Integer]
+
+-- ???
+
+
+
 
 
 
@@ -66,3 +76,47 @@ timesDiv2 n
     | otherwise = 0
 
 -- interleaveStreams
+
+
+-- Exercise 6
+
+
+z :: Stream Integer
+z = Cons 0 $ Cons 1 $ streamRepeat 0
+
+-- x0 = streamMap (\x -> if x == 1 then 1 else 0) nats
+
+instance Num (Stream Integer) where
+    fromInteger n = Cons n (streamRepeat 0)
+    negate (Cons x xs) = Cons (negate x) xs 
+    (+) (Cons x0 xs) (Cons y0 ys) = Cons (x0 + y0) (xs + ys)
+    (*) (Cons x0 xs) t2@(Cons y0 ys) = Cons (x0 * y0) (streamMap (*x0) ys + xs * t2)
+
+
+instance Fractional (Stream Integer) where
+    (/) t1@(Cons x0 xs) (Cons y0 ys) = q 
+        where q = Cons (x0 `div` y0) (streamMap (`div` y0) (t1 - q * ys))
+
+
+-- some testcases
+case1 :: Stream Integer
+case1 = fromInteger 10 :: Stream Integer
+
+case2 :: Stream Integer
+case2 = fromInteger 3 :: Stream Integer
+
+testNegate  :: Stream Integer
+testNegate = fromInteger (-10) :: Stream Integer
+-----
+
+
+fibs3 :: Stream Integer
+fibs3 = z / (1 - z - z^2)
+
+
+
+-- Exercise 7
+
+
+
+
