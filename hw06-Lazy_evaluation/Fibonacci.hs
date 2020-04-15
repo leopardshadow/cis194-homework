@@ -117,6 +117,4 @@ fibs3 = z / (1 - z - z^2)
 
 -- Exercise 7
 
-
-
-
+-- fib4 :: Integer -> Integer
