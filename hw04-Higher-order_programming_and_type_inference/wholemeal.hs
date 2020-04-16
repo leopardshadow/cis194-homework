@@ -5,7 +5,9 @@ fun1 (x:xs)
     | otherwise = fun1 xs
 
 fun1' :: [Integer] -> Integer
-fun1' lst = foldr (*) 1 (map (\x -> if even x then x-1 else 1) lst)
+fun1' = product .  map (subtract 2) . filter even
+
+-- fun1' lst = foldr (*) 1 (map (\x -> if even x then x-1 else 1) lst)
 
 fun1Test = and
     [
@@ -23,7 +25,14 @@ fun2 n
     | otherwise = fun2 (3 * n + 1)
 
 fun2' :: Integer -> Integer
-fun2' num = foldl (\x y-> if even y then x+y else x) 0 $ takeWhile (/=1) $ iterate (\x -> if even x then x `div` 2 else 3 * x + 1) num
+fun2' = sum
+        . filter even
+        . takeWhile (/=1)
+        . iterate (\x -> if even x then x `div` 2 else 3 * x + 1)
+
+
+
+-- fun2' num = foldl (\x y-> if even y then x+y else x) 0 $ takeWhile (/=1) $ iterate (\x -> if even x then x `div` 2 else 3 * x + 1) num
 
 -- using foldr would become
 -- fun2' num = foldr (\x y-> if even x then x+y else y) 0 $ takeWhile (/=1) $ iterate (\x -> if even x then x `div` 2 else 3 * x + 1) num
