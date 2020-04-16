@@ -60,19 +60,29 @@ exercise3 = build msgs
                                LogMessage Info 20 "la la la", 
                                LogMessage Info 30 "OAO",
                                LogMessage Warning 60 "OAO",
+                               LogMessage (Error 100) 40 "help help",
                                Unknown "This is not in the right format"
                              ]
-                             
+
 -- exercise 4
 -- MessageTree to list of LogMessage in timestamp order
 inOrder :: MessageTree -> [LogMessage]
 inOrder Leaf = []
 inOrder (Node left msg right) = (inOrder left) ++ [msg] ++ (inOrder right)
 
+exercise4 :: [LogMessage]
+exercise4 = inOrder exercise3
+
 
 -- exercise 5
--- whatWentWrong :: [LogMessage] -> [String]
-
-
+whatWentWrong :: [LogMessage] -> [String]
+whatWentWrong msgs = foldr (\m ms -> (bigError m) ++ ms) [] sortedMsgs
+                        where sortedMsgs = inOrder $ build msgs
+                              
+bigError :: LogMessage -> [String]
+bigError (LogMessage (Error lvl) _ m)
+    | lvl > 50 = [m]  
+    | otherwise = []
+bigError _ = []
 
 
