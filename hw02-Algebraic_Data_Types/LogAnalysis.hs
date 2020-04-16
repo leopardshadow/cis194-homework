@@ -15,16 +15,16 @@ parseMessage str = let strList = words str in
         ("E":level:ts:m) -> LogMessage (Error $ read level) (read ts) (unwords m)
         _ -> Unknown (unwords strList)
 
--- Q: How to reduce the repeted part like (read ts)...
-
--- -- checkpoint
--- exercise1 = do
---     print $ parseMessage "E 2 562 help help" 
---                 == LogMessage (Error 2) 562 "help help" 
---     print $ parseMessage "I 29 la la la"
---                 == LogMessage Info 29 "la la la"
---     print $ parseMessage "This is not in the right format"
---                 == Unknown "This is not in the right format"
+exercise1 :: Bool
+exercise1 = and
+    [
+        parseMessage "E 2 562 help help" 
+                    == LogMessage (Error 2) 562 "help help" ,
+        parseMessage "I 29 la la la"
+                    == LogMessage Info 29 "la la la" ,
+        parseMessage "This is not in the right format"
+                    == Unknown "This is not in the right format"
+    ]
 
 -- parse many messages
 parse :: String -> [LogMessage]
@@ -34,23 +34,36 @@ parse msgs = map parseMessage (lines msgs)
 -- exercise 2
 -- build a binary tree that
 -- messages are sorted by timestamp
+
+ -- data MessageTree = Leaf
+ --                  | Node MessageTree LogMessage MessageTree
+
 insert :: LogMessage -> MessageTree -> MessageTree
-insert lmsg Leaf =  Node Leaf lmsg Leaf
+insert lmsg@(LogMessage _ _ _) Leaf =  Node Leaf lmsg Leaf
 insert lmsg1@(LogMessage _ ts1 _) (Node left lmsg2@(LogMessage _ ts2 _) right)
     | ts1 > ts2 = Node left lmsg2 (insert lmsg1 right)
     | otherwise = Node (insert lmsg1 left) lmsg2 right
 insert _ tree = tree
 
 
-
 -- exercise 3
 -- build a message tree from messages
 build :: [LogMessage] -> MessageTree
 build msgs = foldr insert Leaf msgs
+-- build msgs = foldl (\t m -> insert m t) Leaf msgs
 
--- build msgs = foldl insert Leaf msgs -- doesn't work ???
 
--- eexercise 4
+exercise3 :: MessageTree
+exercise3 = build msgs
+                where msgs = [ Unknown "This is not in the right format",
+                               LogMessage (Error 2) 50 "help help",
+                               LogMessage Info 20 "la la la", 
+                               LogMessage Info 30 "OAO",
+                               LogMessage Warning 60 "OAO",
+                               Unknown "This is not in the right format"
+                             ]
+                             
+-- exercise 4
 -- MessageTree to list of LogMessage in timestamp order
 inOrder :: MessageTree -> [LogMessage]
 inOrder Leaf = []
