@@ -7,7 +7,7 @@ my solutions to
 --
 (Progress)
 * hw1  : Done
-* hw2  : 
+* hw2  : Done
 * hw3  : Done
 * hw4  : 
 * hw5  : 
