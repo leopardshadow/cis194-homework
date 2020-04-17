@@ -89,7 +89,6 @@ streamInterleave (Cons x xs) ys = Cons x (streamInterleave ys xs)
 
 -- Exercise 6
 
-
 z :: Stream Integer
 z = Cons 0 $ Cons 1 $ streamRepeat 0
 
@@ -103,8 +102,8 @@ instance Num (Stream Integer) where
 
 
 instance Fractional (Stream Integer) where
-    (/) t1@(Cons x0 xs) (Cons y0 ys) = q 
-        where q = Cons (x0 `div` y0) (streamMap (`div` y0) (t1 - q * ys))
+    (/) (Cons x0 xs) (Cons y0 ys) = q 
+        where q = Cons (x0 `div` y0) (streamMap (`div` y0) (xs - q * ys))
 
 
 -- some testcases
@@ -126,4 +125,26 @@ fibs3 = z / (1 - z - z^2)
 
 -- Exercise 7
 
--- fib4 :: Integer -> Integer
+{-
+    | a b |
+    | c d |
+
+    F^n = | F^{n+1}   F^n   |
+          |   F^n   F^{n-1} |
+-}
+data Matrix = Matrix { a :: Integer, b :: Integer, c :: Integer, d :: Integer} 
+                deriving Show
+
+instance Num Matrix where
+    (*) (Matrix a1 b1 c1 d1) (Matrix a2 b2 c2 d2) = 
+            Matrix (mmul a1 b1 a2 c2) (mmul a1 b1 b2 d2) (mmul c1 d1 a2 c2) (mmul c1 d1 b2 d2)
+            where mmul x1 x2 y1 y2 = x1 * y1 + x2 * y2 
+
+
+f :: Matrix
+f = Matrix 1 1 1 0
+
+fib4 :: Integer -> Integer
+fib4 0 = 0
+fib4 n = b (f ^ n)
+
