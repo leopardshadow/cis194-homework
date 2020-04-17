@@ -3,7 +3,7 @@
 {-# OPTIONS_GHC -fno-warn-missing-methods #-}
 
 
--- module Fibonacci where
+module Fibonacci where
 
 -- Exercise 1
 
@@ -20,12 +20,12 @@ fibs1 = map fib [0..]
 -- Exercise 2
 
 -- fibs2 :: [Integer]
+-- fibs2 = 0 : 1 : next fibs2
+--          where next xs = (head xs + head (tail xs)) : next (tail xs)
 
--- ???
-
-
-
-
+fibs2 :: [Integer]
+fibs2 = 0 : 1 : next fibs2
+            where next (a : t@(b:_)) = (a+b) : next t
 
 
 -- Exercise 3
