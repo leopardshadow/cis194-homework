@@ -6,12 +6,12 @@ my solutions to
 
 --
 (Progress)
-* hw1  : Done
-* hw2  : Done
-* hw3  : Done
+* hw1  : Done.
+* hw2  : Done.
+* hw3  : Done.
 * hw4  : 差ex2 foldr用foldl做
 * hw5  : 
-* hw6  : 
+* hw6  : Done.
 * hw7  : 
 * hw8  : 
 * hw9  : 
