@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wall #-}
+
 fun1 :: [Integer] -> Integer
 fun1 [] = 1
 fun1 (x:xs)
@@ -9,6 +11,7 @@ fun1' = product .  map (subtract 2) . filter even
 
 -- fun1' lst = foldr (*) 1 (map (\x -> if even x then x-1 else 1) lst)
 
+fun1Test :: Bool
 fun1Test = and
     [
         fun1 [1,2,3,4,5] == fun1' [1,2,3,4,5],
@@ -37,6 +40,7 @@ fun2' = sum
 -- using foldr would become
 -- fun2' num = foldr (\x y-> if even x then x+y else y) 0 $ takeWhile (/=1) $ iterate (\x -> if even x then x `div` 2 else 3 * x + 1) num
 
+fun2Test :: Bool
 fun2Test = and
     [
         fun2 10 == fun2' 10,
