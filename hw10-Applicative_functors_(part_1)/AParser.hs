@@ -74,6 +74,9 @@ first f (a, c) = (f a, c)
 
 -- Exercise 2
 
--- instance Applicative Parser where
---   pure x = 
+instance Applicative Parser where
+  pure a = Parser $( \s -> Just (a, s) )
+  -- (<*>) p1 p2 = Parser p
+  --     where p = 
+
 
