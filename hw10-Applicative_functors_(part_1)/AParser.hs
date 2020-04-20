@@ -57,3 +57,23 @@ posInt = Parser f
 ------------------------------------------------------------
 -- Your code goes below here
 ------------------------------------------------------------
+
+
+
+-- Exercise 1
+
+-- instance Functor Parser where
+--   fmap f p = Parser (first f (runParser p))
+
+instance Functor Parser where
+  fmap f (Parser p) = Parser (fmap (first f) . p)
+
+first :: (a -> b) -> (a,c) -> (b,c)
+first f (a, c) = (f a, c)
+
+
+-- Exercise 2
+
+-- instance Applicative Parser where
+--   pure x = 
+
