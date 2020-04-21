@@ -8,6 +8,7 @@ import System.IO
 import Buffer
 
 import Control.Exception
+import Control.Monad
 import Control.Monad.State
 
 import Control.Applicative
