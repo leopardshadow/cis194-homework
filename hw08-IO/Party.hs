@@ -28,9 +28,9 @@ instance Monoid GuestList where
 -- retuen the the guest list with more Fun score from 2 guest list
 
 moreFun :: GuestList -> GuestList -> GuestList
-moreFun gl1@(GL _ fun1) gl2@(GL _ fun2)
-    | fun1 > fun2 = gl1
-    | otherwise = gl2
+moreFun = max
+
+
 
 test1 :: [String]
 test1 = 
@@ -49,13 +49,7 @@ test1 =
 
 -- Exercise 2
 
--- treeFold :: (a -> [b] -> b) -> b -> Tree a -> b
-
--- treeFold f z (Node a []) = f a [z]
--- treeFold f z (Node a sf) = f a [ treeFold f z subTree | subTree <- sf]
-
 -- define fold function for Data.Tree
-
 
 treeFold :: (a -> [b] -> b) -> Tree a -> b
 treeFold f (Node a sf) = f a [ treeFold f subTree | subTree <- sf]
@@ -63,8 +57,8 @@ treeFold f (Node a sf) = f a [ treeFold f subTree | subTree <- sf]
 -- treeFold f (Node a []) = f a []
 
 
-tree :: Tree Int
-tree = Node 2 [ 
+treeInt :: Tree Int
+treeInt = Node 2 [ 
             Node 3 [],
             Node 4 [
                 Node 5 [],
@@ -73,54 +67,49 @@ tree = Node 2 [
     ]
 
 
-treeEmp :: Tree Employee
-treeEmp = Node (Emp "0" 10) [ 
-            Node (Emp "0/A" 2) [],
-            Node (Emp "0/B" 4) [
-                Node (Emp "0/B/x" 1) [],
-                Node (Emp "0/B/y" 1) [],
-                Node (Emp "0/B/z" 1) []
-            ]
-    ]
+-- treeEmp :: Tree Employee
+-- treeEmp = Node (Emp "0" 10) [ 
+--             Node (Emp "0/A" 2) [],
+--             Node (Emp "0/B" 4) [
+--                 Node (Emp "0/B/x" 1) [],
+--                 Node (Emp "0/B/y" 1) [],
+--                 Node (Emp "0/B/z" 1) []
+--             ]
+--     ]
 
 
 test2 :: [String]
 test2 = [
-        show $ treeFold (\x l -> x + sum l) tree,
-        show $ treeFold (\x l -> max x (maxx l)) tree,
-        show $ treeFold (\e l -> empFun e + sum l) treeEmp
-    ] where maxx [] = 0    -- to avoid execption ...
-            maxx xs = maximum xs
+        show $ treeFold (\x l -> x + sum l) treeInt,
+        show $ treeFold (\x l -> max x (max' l)) treeInt,
+        show $ treeFold (\e l -> empFun e + sum l) testCompany
+    ] where max' [] = 0    -- to avoid execption ...
+            max' xs = maximum xs
 
+
+maxx :: [GuestList] -> GuestList
+maxx [] = (GL [] 0)
+maxx gl = maximum gl
 
 
 -- Exercise 3
 
 nextLevel :: Employee -> [(GuestList, GuestList)] -> (GuestList, GuestList)
 nextLevel boss gls = (bestGlWithBoss, bestGlWithoutBoss)
-    where subGlWBoss = map fst gls
-          subGlWOBoss = map snd gls
-          bestGlWithBoss = glCons boss (mostFunGl subGlWOBoss)
-          bestGlWithoutBoss = mostFunGl subGlWBoss
-
-
-mostFunGl :: [GuestList] -> GuestList
-mostFunGl gl = foldr (moreFun) (GL [] 0) gl
-
--- testMostFunGl :: Bool
--- testMostFunGl = and
---     [
---         moreFun [  (Emp "a" 1) `glCons`  `glCons`
- 
---                 ]
---     ]
+    where subGlWBoss = mconcat $ map fst gls
+          subGlWOBoss = mconcat $ map snd gls
+          bestGlWithBoss = glCons boss (subGlWOBoss)
+          bestGlWithoutBoss = subGlWBoss
 
 
 -- Exercise 4
 
--- maxFun :: Tree Employee -> GuestList
-
--- maxFun tree = fst $ treeFold (nextLevel) (mempty, mempty) tree
-
+maxFun :: Tree Employee -> GuestList
+maxFun = uncurry moreFun . treeFold nextLevel
 
 
+testMaxFun :: GuestList
+testMaxFun = maxFun testCompany
+
+testMaxFun2 :: GuestList
+testMaxFun2 = maxFun testCompany2

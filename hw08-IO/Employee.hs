@@ -44,7 +44,7 @@ testCompany2
       ]
     ]
 
--- A type to store a list of guests and their total fun score.
+-- A type to store a li st of guests and their total fun score.
 data GuestList = GL [Employee] Fun
   deriving (Show, Eq)
 
