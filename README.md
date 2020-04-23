@@ -13,8 +13,8 @@ my solutions to
 * hw5  : 
 * hw6  : Done.
 * hw7  : 
-* hw8  : 
-* hw9  : 
+* hw8  : 缺最後IO的部分
+* hw9  : (沒有hw9)
 * hw10 : 
 * hw11 : 
 * hw12 : 
