@@ -36,11 +36,21 @@ testOneOrMore = and
 --  2. Utilities
 ------------------------------------------------------------
 
--- spaces :: Parser String
--- spaces = undefined
+spaces :: Parser String
+spaces = zeroOrMore (satisfy isSpace)
 
--- ident :: Parser String
--- ident = undefined
+ident :: Parser String
+ident = (:) <$> (satisfy isAlpha) <*> (zeroOrMore (satisfy isAlphaNum))
+
+
+testIdent :: Bool
+testIdent = and
+    [
+        runParser ident "foobar baz" == Just ("foobar"," baz"),
+        runParser ident "foo33fA" == Just ("foo33fA",""),
+        runParser ident "2bad" == Nothing,
+        runParser ident "" == Nothing
+    ]
 
 ------------------------------------------------------------
 --  3. Parsing S-expressions
