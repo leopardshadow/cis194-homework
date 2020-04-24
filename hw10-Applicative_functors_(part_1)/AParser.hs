@@ -5,7 +5,6 @@
 module AParser where
 
 import           Control.Applicative
-
 import           Data.Char
 
 -- A parser for a value of type a is a function which takes a String
@@ -75,8 +74,63 @@ first f (a, c) = (f a, c)
 -- Exercise 2
 
 instance Applicative Parser where
-  pure a = Parser $( \s -> Just (a, s) )
-  -- (<*>) p1 p2 = Parser p
-  --     where p = 
+  pure a = Parser f
+              where f str = Just (a, str)
+
+  (<*>) p1 p2 = Parser f
+      where f str = case (runParser p1) str of
+                    Nothing -> Nothing
+                    Just (fr, sr) -> case runParser p2 sr of
+                                      Nothing -> Nothing
+                                      Just (fx, sx) -> Just (fr fx, sx)
+
+
+  -- (<*>) p1 p2 = Parser f
+  --     where f str = case (runParser p1) str of
+  --                   Nothing -> Nothing
+  --                   Just (fr, sr) -> first fr <$> runParser p2 sr
+
+
+
+
+
+-- Exercise 3
+
+
+
+abParser :: Parser (Char, Char)
+abParser = (,) <$> char 'a' <*> char 'b'
+
+
+
+abParser_ :: Parser ()
+abParser_ = const () <$> abParser
+
+
+intPair :: Parser [Integer]
+intPair = (\a _ b -> [a, b]) <$> posInt <*> char ' ' <*> posInt
+
+
+
+
+-- Exercise 4
+
+instance Alternative Parser where
+
+  empty = Parser $ const Nothing
+  p1 <|> p2 = Parser p
+                  where p s = runParser p1 s <|> runParser p2 s
+
+
+
+
+-- Exercise 5
+
+-- intOrUppercase :: Parser ()
+
+
+
+
+
 
 
