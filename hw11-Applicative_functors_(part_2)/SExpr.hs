@@ -6,26 +6,41 @@ module SExpr where
 
 import AParser
 import Control.Applicative
+import Data.Char
 
 ------------------------------------------------------------
 --  1. Parsing repetitions
 ------------------------------------------------------------
 
 zeroOrMore :: Parser a -> Parser [a]
-zeroOrMore p = undefined
+zeroOrMore p = oneOrMore p <|> pure []
 
 oneOrMore :: Parser a -> Parser [a]
-oneOrMore p = undefined
+oneOrMore p = (:) <$> p <*> zeroOrMore p
+
+testzeroOrMore :: Bool
+testzeroOrMore = and
+    [
+        runParser (zeroOrMore (satisfy isUpper)) "ABCdEfgH" == Just ("ABC","dEfgH"),
+        runParser (zeroOrMore (satisfy isUpper)) "abcdeFGh" == Just ("","abcdeFGh")
+    ]
+
+testOneOrMore :: Bool
+testOneOrMore = and
+    [
+        runParser (oneOrMore (satisfy isUpper)) "ABCdEfgH" == Just ("ABC","dEfgH"),
+        runParser (oneOrMore (satisfy isUpper)) "abcdeFGh" == Nothing
+    ]
 
 ------------------------------------------------------------
 --  2. Utilities
 ------------------------------------------------------------
 
-spaces :: Parser String
-spaces = undefined
+-- spaces :: Parser String
+-- spaces = undefined
 
-ident :: Parser String
-ident = undefined
+-- ident :: Parser String
+-- ident = undefined
 
 ------------------------------------------------------------
 --  3. Parsing S-expressions
