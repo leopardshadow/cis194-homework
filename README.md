@@ -15,6 +15,6 @@ my solutions to
 * hw7  : 
 * hw8  : 缺最後IO的部分
 * hw9  : (沒有hw9)
-* hw10 : 
+* hw10 : Done.
 * hw11 : 
 * hw12 : 
