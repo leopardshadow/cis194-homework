@@ -80,17 +80,15 @@ instance Applicative Parser where
   (<*>) p1 p2 = Parser f
       where f str = case (runParser p1) str of
                     Nothing -> Nothing
-                    Just (fr, sr) -> case runParser p2 sr of
-                                      Nothing -> Nothing
-                                      Just (fx, sx) -> Just (fr fx, sx)
+                    Just (fr, sr) -> first fr <$> runParser p2 sr
 
 
   -- (<*>) p1 p2 = Parser f
   --     where f str = case (runParser p1) str of
   --                   Nothing -> Nothing
-  --                   Just (fr, sr) -> first fr <$> runParser p2 sr
-
-
+  --                   Just (fr, sr) -> case runParser p2 sr of
+  --                                     Nothing -> Nothing
+  --                                     Just (fx, sx) -> Just (fr fx, sx)
 
 
 
@@ -100,7 +98,6 @@ instance Applicative Parser where
 
 abParser :: Parser (Char, Char)
 abParser = (,) <$> char 'a' <*> char 'b'
-
 
 
 abParser_ :: Parser ()
@@ -118,16 +115,17 @@ intPair = (\a _ b -> [a, b]) <$> posInt <*> char ' ' <*> posInt
 instance Alternative Parser where
 
   empty = Parser $ const Nothing
+
   p1 <|> p2 = Parser p
-                  where p s = runParser p1 s <|> runParser p2 s
+                where p s = runParser p1 s <|> runParser p2 s
 
 
 
 
 -- Exercise 5
 
--- intOrUppercase :: Parser ()
-
+intOrUppercase :: Parser ()
+intOrUppercase = (const () <$> posInt) <|> (const () <$> satisfy isUpper)
 
 
 
