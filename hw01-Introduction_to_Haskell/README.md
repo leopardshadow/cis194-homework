@@ -48,10 +48,21 @@ sumDigits (x:xs) = x `div` 10 + x `mod` 10 + sumDigits xs
 * 再 `doubleEveryOther`
 * 接著 `sumDigits`
 * 最後檢查 `mod 10 == 0`
+
 ```Haskell
 validate :: Integer -> Bool
 validate n =  ( sumDigits $ doubleEveryOther $ toDigits n) `mod` 10 == 0
 ```
+
+發現有個網站 http://pointfree.io/
+可以把 code 換成 pointfree 的版本，上面的 validate 輸進去可以寫成
+
+```Haskell
+validate = (0 ==) . (`mod` 10) . sumDigits . doubleEveryOther . toDigits
+```
+
+酷
+
 ## Exercise 5
 
 經典河內塔問題 ~
