@@ -27,7 +27,7 @@ die = getRandom
 
 type Army = Int
 
-data Battlefield = Battlefield { attackers :: Army, defenders :: Army }
+data Battlefield = Battlefield { attackers :: Army, defenders :: Army } deriving Show
 
 
 
@@ -54,7 +54,7 @@ matchDices = zipWith compare
 
 -- 
 updateBf :: Battlefield -> [Ordering] -> Battlefield
-updateBf (Battlefield atk def) xs = (Battlefield atk def)
+updateBf (Battlefield atk def) xs = (Battlefield atk' def')
     where atkDeath = length . filter (==GT) $ xs
           defDeath = length . filter (/=GT) $ xs
           atk' = atk - atkDeath 
@@ -72,8 +72,21 @@ battle bf@(Battlefield atk def) = do
 -- Exercise 3
 
 invade :: Battlefield -> Rand StdGen Battlefield
-invade = undefined
+invade bf = do
+    bf' <- battle bf
+    if endGame bf'
+    then invade bf'
+    else return bf'
+
 
 endGame :: Battlefield -> Bool
 endGame (Battlefield atk def) = (atk < 2) || (def == 0)
+
+
+
+-- exercise 4
+
+successProb :: Battlefield -> Rand StdGen Double
+successProb bf = undefined
+
 
