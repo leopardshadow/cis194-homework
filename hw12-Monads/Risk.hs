@@ -1,5 +1,8 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
+{-# OPTIONS_GHC -Wall #-}
+
+
 module Risk where
 
 import Control.Monad.Random
@@ -99,19 +102,19 @@ endGame (Battlefield atk def) = (atk < 2) || (def == 0)
 
 
 atkWin :: Battlefield -> Bool
-atkWin (Battlefield atk def) = def == 0
+atkWin (Battlefield _ def) = def == 0
 
 successProb :: Battlefield -> Rand StdGen Double
 successProb bf = do
     simulations <- replicateM 1000 (invade bf)
     let wins = length . filter atkWin $ simulations
-    return (fromIntegral wins / fromIntegral 1000)
+    return (fromIntegral wins / 1000)
 
 -- evalRandIO (successProb (Battlefield 5 5)) >>= print
 
 
 -- Exercise 5
 exactSuccessProb :: Battlefield -> Double
-
+exactSuccessProb = undefined
 
 
