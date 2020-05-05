@@ -17,4 +17,4 @@ my solutions to
 * hw9  : (沒有hw9)
 * hw10 : Done.
 * hw11 : 
-* hw12 : 
+* hw12 : Done.(差最後ex5，不用模擬的)
