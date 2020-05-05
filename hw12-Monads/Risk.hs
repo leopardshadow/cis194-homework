@@ -97,7 +97,21 @@ endGame (Battlefield atk def) = (atk < 2) || (def == 0)
 
 -- exercise 4
 
+
+atkWin :: Battlefield -> Bool
+atkWin (Battlefield atk def) = def == 0
+
 successProb :: Battlefield -> Rand StdGen Double
-successProb bf = undefined
+successProb bf = do
+    simulations <- replicateM 1000 (invade bf)
+    let wins = length . filter atkWin $ simulations
+    return (fromIntegral wins / fromIntegral 1000)
+
+-- evalRandIO (successProb (Battlefield 5 5)) >>= print
+
+
+-- Exercise 5
+
+
 
 
