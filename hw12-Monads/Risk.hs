@@ -69,12 +69,19 @@ battle bf@(Battlefield atk def) = do
 
 
 
+--
+-- evalRandIO (return (Battlefield 5 5)) >>= print
+-- evalRandIO (battle (Battlefield 5 5)) >>= print
+-- evalRandIO (return (Battlefield 5 5) >>= battle) >>= print
+-- evalRandIO (return (Battlefield 5 5) >>= battle >>= battle) >>= print
+
+
 -- Exercise 3
 
 invade :: Battlefield -> Rand StdGen Battlefield
 invade bf = do
     bf' <- battle bf
-    if endGame bf'
+    if not $ endGame bf'
     then invade bf'
     else return bf'
 
@@ -82,6 +89,10 @@ invade bf = do
 endGame :: Battlefield -> Bool
 endGame (Battlefield atk def) = (atk < 2) || (def == 0)
 
+
+
+-- 
+-- evalRandIO (invade (Battlefield 5 5)) >>= print
 
 
 -- exercise 4
