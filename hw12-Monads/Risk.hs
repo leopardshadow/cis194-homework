@@ -111,7 +111,7 @@ successProb bf = do
 
 
 -- Exercise 5
-
+exactSuccessProb :: Battlefield -> Double
 
 
 
