@@ -38,7 +38,11 @@ evalStr str = case (parseExp Lit Add Mul str) of
                 Nothing -> Nothing 
 ```
 
+
+
 ## Exercise 3
+
+從 Exercise 3 開始就變得比較抽象難懂了 ...
 
 還沒仔細看題目之前我以為是這樣寫，只是把 constructor 換成不同寫法而已，但其實要做的事情沒有這麼簡單。
 
@@ -55,9 +59,32 @@ mul e1 e2 = Mul e1 e2
 
 在題目裡說到
 
+\(\( 不是逐字翻譯，部份是我的想法 \)\)
+
 > Unfortunately, there seems to be some disagreement over exactly how the calculator should go about its calculating business.
 
+對於這個 Calculator 究竟要怎麼運算有不同的聲音
+
+> The problem the software department (i.e. you) has is that while ExprT is nice, it is also rather inflexible, which makes catering to diverse demographics a bit clumsy. You decide to abstract away the properties of ExprT with a type class.
+
+ExprT 不彈性，沒辦法迎合不同人的需求
+
 > Create a type class called Expr with three methods called lit, add, and mul which parallel the constructors of ExprT. Make an instance of Expr for the ExprT type, in such a way that ` mul (add (lit 2) (lit 3)) (lit 4) :: ExprT == Mul (Add (Lit 2) (Lit 3)) (Lit 4)`
+
+創一個 typeclass `Expr` \(有 lit, add 和 mul 這三個 function\)，讓 `ExprT` 成為 `Expr` 的 instance
+
+也就是說之後我們讓某一個 type 成為 `Expr` 的 instance 後，就可以用 lit, add 和 mul 這三個 function 來操作他。
+
+讓 `ExprT` 成為 `Expr` 的 instance 後，用 lit, add 和 mul 來操作，而不是直接用內部如何實作的 Lit, Add 和 Mul
+
+也因此
+
+```haskell
+ mul (add (lit 2) (lit 3)) (lit 4) :: ExprT
+   == Mul (Add (Lit 2) (Lit 3)) (Lit 4)
+```
+
+對 ExprT 來說，lit, add, mul 就等同於 Lit, Add, Mul
 
 
 題目提示要好好想想 type，可以先看看 Lit, Add 和 Mul 的 type
@@ -67,7 +94,7 @@ Add :: ExprT -> ExprT -> ExprT
 Mul :: ExprT -> ExprT -> ExprT
 ```
 
-這裡我們先定義了 `Expr`
+這裡我們先定義了 `Expr` 這個 typeclass
 
 ```haskell
 class Expr a where
@@ -77,6 +104,8 @@ class Expr a where
 ```
 
 `ExprT` 算是 `Expr` 的一個特例 \(Expr Integer\)，讓 `ExprT` 成為 `Expr` 的 instance。想成為 instance，要定義 lit, add 和 mul，而這其實就是上面的 Lit, Add 和 Mul。
+
+> You decide to abstract away the properties of ExprT with a type class.
 
 ```haskell
 instance Expr ExprT where
@@ -93,16 +122,25 @@ instance Expr ExprT where
 Expr a => a
 ```
 
-`mul (add (lit 2) (lit 3)) (lit 4)` 這個 expression 可能是任何 type a。GHC 不知道要用哪種 type 去實作。
+`mul (add (lit 2) (lit 3)) (lit 4)` 這個 expression 可能是任何 type，只要他是 Expr 的 instance。GHC 不知道要用哪種實作方式 \(會依 type 而有所不同\)。
 
-一個解決的辦法是幫他加上 type signature。另一個方式是
+一個解決的辦法是幫他加上 type signature。
+
+另一個方式是
 
 ```haskell
 reify :: ExprT -> ExprT
 reify = id
 ```
 
-如此一來，
+如此一來，他的 type 就被限制住了
+
+```haskell
+reify $ mul (add (lit 2) (lit 3)) (lit 4)
+```
+
+我猜是跟 Haskell 的 Type inference \(型別推論\) 有關，`reify` 是 `ExprT -> ExprT`，後面雖然沒寫明是 Expr 什麼，但根據這個 `reify`，他的 type 會被推論成 `ExprT`。
+
 
 
 ## Exercise 4
@@ -115,10 +153,10 @@ reify = id
 testExp :: Expr a => Maybe a
 testExp = parseExp lit add mul "(3 * -4) + 5"
 
-testInteger  = testExp :: Maybe Integer
-testBool     = testExp :: Maybe Bool
-testMM       = testExp :: Maybe MinMax
-testSat      = testExp :: Maybe Mod7
+testInteger  = testExp :: Maybe Integer  -- Just (-7)
+testBool     = testExp :: Maybe Bool  -- Just True
+testMM       = testExp :: Maybe MinMax  -- Just (MinMax 3)
+testSat      = testExp :: Maybe Mod7  -- Just (Mod7 0)
 ```
 
 實作起來都差不多，讓某個 type 成為 Expr 的 instance，並為他定義 lit, add 和 mul 函數。
@@ -154,14 +192,9 @@ instance Expr Mod7 where
 
 
 
-
-
-
 ## Exercise 5
 
-這題要模擬一個模擬組合語言的計算機。
-
-指令包括
+這題要模擬一個模擬組合語言的計算機，他總共有六個指令
 
 ```haskell
 data StackExp = PushI Integer
@@ -180,8 +213,35 @@ data StackExp = PushI Integer
 type Program = [StackExp]
 ```
 
+* PushI 和 PushB 會把值 \(分別是Integer 和 Bool\) push 進 stack 最上面 ; 
+* Add, Mul, And 和 Or 會從 stack 中取最上面兩個做運算後，push 結果進 stack
+
+如 運算元 \(operand\) 不夠或操作對應的 datatype 不對，他說處理器會融化成一灘矽 w
 
 
+先來說我在做這題時遇到的問題
+
+True / False 在字串裡怎麼表示
+
+
+
+
+
+
+
+> Simply create an instance of the Expr type class for Program, so that arithmetic expressions can be interpreted as compiled programs. 
+
+
+
+最後我們的結果會是一個 compile function 
+`compile :: String -> Maybe Program`
+
+
+
+
+
+
+## Exercise 6
 
 
 
