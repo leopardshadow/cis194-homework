@@ -147,7 +147,7 @@ reify $ mul (add (lit 2) (lit 3)) (lit 4)
 
 這題要為 Integer, Bool, MinMax 和 Mod7 弄 instance。
 
-完成後，給一個 `testExp` 再指定不同的 type，能讓他用不同的方式去做。
+完成後，給一個 `testExp`，都是 `parseExp lit add mul "(3 * -4) + 5`，但指定不同的 type，能讓他用不同的方式去做。
 
 ```haskell
 testExp :: Expr a => Maybe a
@@ -203,11 +203,11 @@ data StackExp = PushI Integer
               | Mul
               | And
               | Or
-               deriving Show
+               deriving (Show, Eq)  -- Eq !!
 ```
 
 
-而 `Program` 是一串指令
+而 `Program` 是一串指令，是 `StackExp` 的 list
 
 ```haskell
 type Program = [StackExp]
@@ -219,26 +219,59 @@ type Program = [StackExp]
 如 運算元 \(operand\) 不夠或操作對應的 datatype 不對，他說處理器會融化成一灘矽 w
 
 
-先來說我在做這題時遇到的問題
-
-True / False 在字串裡怎麼表示
-
-
-
-
-
-
-
 > Simply create an instance of the Expr type class for Program, so that arithmetic expressions can be interpreted as compiled programs. 
 
 
+---
 
-最後我們的結果會是一個 compile function 
-`compile :: String -> Maybe Program`
+雖然上面提到了六個指令，但好像沒有要處理有關 Bool 的部分 \(\(?
+
+```haskell
+stackVM [PushB False, PushB True, StackVM.And]
+```
+
+結果確實是 False，在 stackVM 裡有寫
+
+不知道在 parser 那邊是怎麼定義的 ...
+
+---
+
+原本的 StackExp 和 StackVal 都只有 `deriving Show`，我把它改成 `deriving (Show, Eq)`，這樣後面才可以比較
+
+```haskell
+instance Expr Program where
+    lit x = [StackVM.PushI x]
+    add x y = x ++ y ++ [StackVM.Add]
+    mul x y = x ++ y ++ [StackVM.Mul]
+```
 
 
 
+把 String 轉成 Maybe Program，如果 parse 不成功就是 Nothing，成功的話就是一連串的指令 \(`type Program = [StackExp]`\)
+ 
+```haskell
+compile :: String -> Maybe Program
+compile = parseExp lit add mul
+```
 
+
+stackVM 在 StackVM.hs 中定義，下面擷取比較重要的幾行
+
+```haskell
+stackVM :: Program -> Either String StackVal
+stackVM = execute []
+
+execute :: Stack -> Program -> Either String StackVal
+```
+
+如果 compile 失敗就回傳失敗訊息，成功就跑 stackVM 這個 function
+
+```haskell
+run :: String -> Either String StackVal
+run str = case compile str of
+            Nothing -> Left "compile error OAO"
+            (Just prog) -> stackVM prog
+```
 
 
 ## Exercise 6
