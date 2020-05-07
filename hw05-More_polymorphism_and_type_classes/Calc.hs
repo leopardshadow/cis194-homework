@@ -151,14 +151,30 @@ testCompile = and
     ]
 
 
+-- in StackVM.hs
+-- Execute the given program. Returns either an error message or the
+-- value on top of the stack after execution.
+-- stackVM :: Program -> Either String StackVal
+-- stackVM = execute []
+
 -- execute :: Stack -> Program -> Either String StackVal
 
--- run :: String -> Either String StackVal
--- run = undefined
+run :: String -> Either String StackVal
+run str = case compile str of
+            Nothing -> Left "compile error OAO"
+            (Just prog) -> stackVM prog
 
 
 
-
+testRun :: Bool
+testRun = and
+    [
+        run "3" == Right (StackVM.IVal 3),
+        run "1+2" == Right (StackVM.IVal 3),
+        run "1+2*3" == Right (StackVM.IVal 7),
+        run "(1+2)*3" == Right (StackVM.IVal 9),
+        run "1+" == Left "compile error OAO"
+    ]
 
 
 

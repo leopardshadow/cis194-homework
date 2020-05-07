@@ -2,7 +2,7 @@ module StackVM (StackVal(..), StackExp(..), Stack, Program, stackVM) where
 
 -- Values that may appear in the stack. Such a value will also be
 -- returned by the stackVM program execution function.
-data StackVal = IVal Integer | BVal Bool | Void deriving Show
+data StackVal = IVal Integer | BVal Bool | Void deriving (Show, Eq)
 
 -- The various expressions our VM understands.
 data StackExp = PushI Integer
