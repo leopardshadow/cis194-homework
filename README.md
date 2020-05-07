@@ -10,7 +10,7 @@ my solutions to
 * hw2  : Done.
 * hw3  : Done.
 * hw4  : 差ex2 foldr用foldl做
-* hw5  : 
+* hw5  : 差ex6\(optional\)
 * hw6  : Done.
 * hw7  : 
 * hw8  : 缺最後IO的部分
