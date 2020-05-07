@@ -128,7 +128,6 @@ testEx4 = and
 -- Exercise 5
 
 
-
 instance Expr Program where
     lit x = [StackVM.PushI x]
     add x y = x ++ y ++ [StackVM.Add]
@@ -137,16 +136,26 @@ instance Expr Program where
 
 
 
-
-
 compile :: String -> Maybe Program
 compile = parseExp lit add mul
 
 
+testCompile :: Bool
+testCompile = and
+    [
+        compile "3" == Just [StackVM.PushI 3],
+        compile "1+2" == Just [StackVM.PushI 1, StackVM.PushI 2, StackVM.Add],
+        compile "1+2*3" == Just [StackVM.PushI 1, StackVM.PushI 2, StackVM.PushI 3, StackVM.Mul, StackVM.Add],
+        compile "(1+2)*3" == Just [StackVM.PushI 1, StackVM.PushI 2,  StackVM.Add, StackVM.PushI 3, StackVM.Mul],
+        compile "1+" == Nothing
+    ]
+
+
 -- execute :: Stack -> Program -> Either String StackVal
 
-run :: String -> Either String StackVal
-run = undefined
+-- run :: String -> Either String StackVal
+-- run = undefined
+
 
 
 
