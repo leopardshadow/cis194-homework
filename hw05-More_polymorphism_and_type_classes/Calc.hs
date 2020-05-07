@@ -1,11 +1,12 @@
 {-# OPTIONS_GHC -Wall #-}
 {-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE FlexibleInstances #-}
 
 module Calc where
 
 import ExprT
 import Parser
--- import StackVM
+import StackVM
 
 
 -- Exercise 1
@@ -121,4 +122,40 @@ testEx4 = and
         testMM == Just (MinMax 3),
         testSat == Just (Mod7 0)
     ]
+
+
+
+-- Exercise 5
+
+
+
+instance Expr Program where
+    lit x = [StackVM.PushI x]
+    add x y = x ++ y ++ [StackVM.Add]
+    mul x y = x ++ y ++ [StackVM.Mul]
+
+
+
+
+
+
+compile :: String -> Maybe Program
+compile = parseExp lit add mul
+
+
+-- execute :: Stack -> Program -> Either String StackVal
+
+run :: String -> Either String StackVal
+run = undefined
+
+
+
+
+
+
+-- Exercise 6
+
+
+
+
 
