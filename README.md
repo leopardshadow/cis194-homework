@@ -9,7 +9,7 @@ my solutions to
 * hw1  : Done.
 * hw2  : Done.
 * hw3  : Done.
-* hw4  : 差ex2 foldr用foldl做
+* hw4  : Done.
 * hw5  : 差ex6\(optional\)
 * hw6  : Done.
 * hw7  : 
