@@ -23,15 +23,18 @@ testMap =
     ]
 
 
-myFoldl :: (a -> b -> a) -> a -> [b] -> a 
-myFoldl = foldr . flip
+-- myFoldl :: (a -> b -> a) -> a -> [b] -> a 
+-- myFoldl = foldr . flip
 -- myFoldl f base lst = foldr (\x y -> f y x) base lst 
 
+myFoldl :: (b -> a -> b) -> b -> [a] -> b
+myFoldl f base xs = foldr (\e acc -> acc `f` e) base (reverse xs)
 
 
 
 testFold :: Bool
 testFold = and
     [
-        foldl (-) 0 [1..3] == myFoldl (-) 0 [1..3]
+        foldl (-) 0 [1..3] == myFoldl (-) 0 [1..3], 
+        myFoldl (++) "000" ["A", "bb", "CCC"] == foldl (++) "000" ["A", "bb", "CCC"]
     ]
