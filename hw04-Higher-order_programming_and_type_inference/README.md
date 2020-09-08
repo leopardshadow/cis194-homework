@@ -66,7 +66,46 @@ map' f lst = foldr (\x l -> f x : l) [] lst
 
 foldl 用 folr 做
 
-\(... 還沒做... \)
+Prelude> :i foldl
+
+下面是 foldr 和 foldl 的 type signature
+
+```
+class Foldable (t :: * -> *) where
+  ...
+  foldl :: (b -> a -> b) -> b -> t a -> b
+  ...
+  	-- Defined in ‘Data.Foldable’
+Prelude> :i foldr
+class Foldable (t :: * -> *) where
+  ...
+  foldr :: (a -> b -> b) -> b -> t a -> b
+  ...
+  	-- Defined in ‘Data.Foldable’
+```
+
+
+下面是我對 foldr 和 foldl 的理解，除了第一個參數 type signature 的不同，兩者在做的順序也不同。foldr 可以看成把起始值放在右邊，一路往左收 ; 而 foldl 則剛好相反，是把起始值放在左邊，往右收。
+
+![](https://i.imgur.com/iZU6vIp.png)
+
+來看一個例子
+
+```
+Prelude> foldr (++) "000" ["A", "bb", "CCC"]
+"AbbCCC000"
+Prelude> foldl (++) "000" ["A", "bb", "CCC"]
+"000AbbCCC"
+```
+
+所以啊，**不是**只要把參數順序調換過來就好，還有順序
+
+以下是我的 code
+
+```
+myFoldl :: (b -> a -> b) -> b -> [a] -> b
+myFoldl f base xs = foldr (\e acc -> acc `f` e) base (reverse xs)
+```
 
 
 ## Exercise 4: Finding primes
